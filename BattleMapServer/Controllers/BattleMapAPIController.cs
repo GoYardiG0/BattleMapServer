@@ -29,7 +29,7 @@ namespace BattleMapServer.Controllers
         {
             try
             {
-                return Ok("Works!");`
+                return Ok("Works!");
             }
             catch (Exception ex)
             {
