@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 namespace BattleMapServer.Models;
 
 [Keyless]
-[Table("friends")]
 public partial class Friend
 {
     public int? UserId { get; set; }

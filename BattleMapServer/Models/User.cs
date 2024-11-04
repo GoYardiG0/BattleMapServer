@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BattleMapServer.Models;
 
-[Index("UserEmail", Name = "UQ__Users__08638DF8387132CE", IsUnique = true)]
-[Index("UserName", Name = "UQ__Users__C9F28456E8AB8086", IsUnique = true)]
+[Index("UserEmail", Name = "UQ__Users__08638DF8CB8CA80D", IsUnique = true)]
+[Index("UserName", Name = "UQ__Users__C9F284565A1DF437", IsUnique = true)]
 public partial class User
 {
     [Key]

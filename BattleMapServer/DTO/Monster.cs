@@ -10,6 +10,8 @@ namespace BattleMapServer.DTO
 
         public string MonsterName { get; set; } = null!;
 
+        public string? MonsterPic { get; set; }
+
         public int Ac { get; set; }
 
         public int Hp { get; set; }
@@ -33,6 +35,27 @@ namespace BattleMapServer.DTO
         public string? ActionDesc { get; set; }
 
         public string? SpecialActionDesc { get; set; }
+
+        public Monster(Models.Monster modelMonster)
+        {
+            this.MonsterId = modelMonster.MonsterId;
+            this.UserId = modelMonster.UserId;
+            this.MonsterName = modelMonster.MonsterName;
+            this.MonsterPic = modelMonster.MonsterPic;
+            this.Ac = modelMonster.Ac;
+            this.Hp = modelMonster.Hp;
+            this.Str = modelMonster.Str;
+            this.Dex = modelMonster.Dex;
+            this.Con = modelMonster.Con;
+            this.Int = modelMonster.Int;
+            this.Wis = modelMonster.Wis;
+            this.Cha = modelMonster.Cha;
+            this.Cr = modelMonster.Cr;
+            this.PassiveDesc = modelMonster.PassiveDesc;
+            this.ActionDesc = modelMonster.ActionDesc;
+            this.SpecialActionDesc = modelMonster.SpecialActionDesc;
+
+        }
 
     }
 }

@@ -1,4 +1,3 @@
-﻿
 ﻿use master
 Go
 IF EXISTS (SELECT * FROM sys.databases WHERE name = N'BattleMapDB')
@@ -34,6 +33,8 @@ UserId int foreign Key References Users(UserId) ,
 
 MonsterName nvarchar(50) Unique Not Null,
 
+MonsterPic nvarchar(100),
+
 AC int not null,
 
 HP int not null,
@@ -62,11 +63,13 @@ special_action_desc  nvarchar(1000)
 go
 Create Table Characters
 (
-CharaterId int Primary Key Identity,
+CharacterId int Primary Key Identity,
 
 UserId int foreign Key References Users(UserId) ,
 
-CharaterName nvarchar(50) Unique Not Null,
+CharacterName nvarchar(50) Unique Not Null,
+
+CharacterPic nvarchar(100),
 
 AC int not null,
 
@@ -93,14 +96,14 @@ action_desc nvarchar(1000),
 special_action_desc  nvarchar(1000)
 
 )
-go
-create table friends
+
+create table Friends
 (
 UserId int foreign Key References Users(UserId),
 FriendId int
 )
 go
-insert into users Values('admin', 'yarden.golan07@gmail.com', 'admin')
+insert into Users (UserName,UserEmail,UserPassword) Values ('admin', 'yarden.golan07@gmail.com', 'admin')
 go
 
 CREATE LOGIN [MapAdminLogin] WITH PASSWORD = 'AdminPassword';
@@ -116,3 +119,6 @@ Go
 select * from Users
 select * from Monsters
 select * from Characters
+select * from Friends
+
+-- scaffold-DbContext "Server = (localdb)\MSSQLLocalDB;Initial Catalog=BattleMapDB;User ID=[MapAdminLogin];Password=AdminPassword;" Microsoft.EntityFrameworkCore.SqlServer -OutPutDir Models -Context BattleMapDbContext -DataAnnotations –force

@@ -10,6 +10,8 @@ namespace BattleMapServer.DTO
 
         public string CharacterName { get; set; } = null!;
 
+        public string? CharacterPic { get; set; }
+
         public int Ac { get; set; }
 
         public int Hp { get; set; }
@@ -36,9 +38,10 @@ namespace BattleMapServer.DTO
 
         public Character(Models.Character modelCharacter)
         {
-            this.CharacterId = modelCharacter.CharaterId;
+            this.CharacterId = modelCharacter.CharacterId;
             this.UserId = modelCharacter.UserId;
-            this.CharacterName = modelCharacter.CharaterName;
+            this.CharacterName = modelCharacter.CharacterName;
+            this.CharacterPic = modelCharacter.CharacterPic;
             this.Ac = modelCharacter.Ac;
             this.Hp = modelCharacter.Hp;
             this.Str = modelCharacter.Str;

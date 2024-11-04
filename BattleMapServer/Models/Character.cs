@@ -6,16 +6,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BattleMapServer.Models;
 
-[Index("CharaterName", Name = "UQ__Characte__73CFF70D19A65511", IsUnique = true)]
+[Index("CharacterName", Name = "UQ__Characte__51594B297EACD2AD", IsUnique = true)]
 public partial class Character
 {
     [Key]
-    public int CharaterId { get; set; }
+    public int CharacterId { get; set; }
 
     public int? UserId { get; set; }
 
     [StringLength(50)]
-    public string CharaterName { get; set; } = null!;
+    public string CharacterName { get; set; } = null!;
+
+    [StringLength(100)]
+    public string? CharacterPic { get; set; }
 
     [Column("AC")]
     public int Ac { get; set; }

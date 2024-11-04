@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BattleMapServer.Models;
 
-[Index("MonsterName", Name = "UQ__Monsters__80D8AE9D91F3F3C0", IsUnique = true)]
+[Index("MonsterName", Name = "UQ__Monsters__80D8AE9D37AEE8C7", IsUnique = true)]
 public partial class Monster
 {
     [Key]
@@ -16,6 +16,9 @@ public partial class Monster
 
     [StringLength(50)]
     public string MonsterName { get; set; } = null!;
+
+    [StringLength(100)]
+    public string? MonsterPic { get; set; }
 
     [Column("AC")]
     public int Ac { get; set; }

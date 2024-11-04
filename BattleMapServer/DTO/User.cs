@@ -12,27 +12,27 @@ namespace BattleMapServer.DTO
 
         public string UserPassword { get; set; } = null!;
 
-        public virtual ICollection<Models.Character> Characters { get; set; } = new List<Models.Character>();
+        public virtual ICollection<Character> Characters { get; set; } = new List<Character>();
 
-        public virtual ICollection<Models.Monster> Monsters { get; set; } = new List<Models.Monster>();
+        public virtual ICollection<Monster> Monsters { get; set; } = new List<Monster>();
         public User(Models.User modelUser)
         {
             this.UserId = modelUser.UserId;
             this.UserName = modelUser.UserName;           
             this.UserEmail = modelUser.UserEmail;
             this.UserPassword = modelUser.UserPassword;
-            this.Characters = modelUser.Characters;
+            this.Characters = new List<Character>();
             foreach (var character in modelUser.Characters) 
             {
                 this.Characters.Add(new Character(character));
             }
 
-            this.Monsters = modelUser.Monsters;
-            this.UserTasks = new List<UserTask>();
-            foreach (var task in modelUser.UserTasks)
+            this.Monsters = new List<Monster>();
+            foreach (var monster in modelUser.Monsters)
             {
-                this.UserTasks.Add(new UserTask(task));
+                this.Monsters.Add(new Monster(monster));
             }
+
         }
     }
 }
