@@ -4,6 +4,10 @@ namespace BattleMapServer.DTO
 {
     public class User
     {
+        public User()
+        {
+
+        }
         public int UserId { get; set; }
 
         public string UserName { get; set; } = null!;
@@ -18,11 +22,11 @@ namespace BattleMapServer.DTO
         public User(Models.User modelUser)
         {
             this.UserId = modelUser.UserId;
-            this.UserName = modelUser.UserName;           
+            this.UserName = modelUser.UserName;
             this.UserEmail = modelUser.UserEmail;
             this.UserPassword = modelUser.UserPassword;
             this.Characters = new List<Character>();
-            foreach (var character in modelUser.Characters) 
+            foreach (var character in modelUser.Characters)
             {
                 this.Characters.Add(new Character(character));
             }
@@ -34,5 +38,18 @@ namespace BattleMapServer.DTO
             }
 
         }
+        public Models.User GetModels()
+        {
+            Models.User modelsUser = new Models.User()
+            {
+                UserId = this.UserId,
+                UserName = this.UserName,
+                UserEmail = this.UserEmail,
+                UserPassword = this.UserPassword
+            };
+
+            return modelsUser;
+        }
+
     }
 }

@@ -65,5 +65,28 @@ namespace BattleMapServer.Controllers
             }
 
         }
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] DTO.User userDto)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Create model user class
+                Models.User modelsUser = userDto.GetModels();
+
+                context.Users.Add(modelsUser);
+                context.SaveChanges();
+
+                //User was added!
+                DTO.User dtoUser = new DTO.User(modelsUser);
+                return Ok(dtoUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 }
