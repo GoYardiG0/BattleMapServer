@@ -36,6 +36,7 @@ namespace BattleMapServer.DTO
 
         public string? SpecialActionDesc { get; set; }
 
+        public Monster() { }
         public Monster(Models.Monster modelMonster)
         {
             this.MonsterId = modelMonster.MonsterId;

@@ -36,6 +36,10 @@ namespace BattleMapServer.DTO
 
         public string? SpecialActionDesc { get; set; }
 
+        public Character()
+        {
+
+        }
         public Character(Models.Character modelCharacter)
         {
             this.CharacterId = modelCharacter.CharacterId;
