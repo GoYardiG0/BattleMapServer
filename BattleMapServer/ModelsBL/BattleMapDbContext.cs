@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BattleMapServer.Models
 {
    
-        public partial class BattleMapDbContext
+        public partial class BattleMapDbContext:DbContext
         {
             public User? GetUser(string Name)
             {
