@@ -45,7 +45,7 @@ namespace BattleMapServer.Controllers
                 HttpContext.Session.Clear(); //Logout any previous login attempt
 
                 //Get model user class from DB with matching email. 
-                Models.User? modelsUser = context.GetUser(loginDto.Email);
+                Models.User? modelsUser = context.GetUser(loginDto.UserName);
 
                 //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
                 if (modelsUser == null || modelsUser.UserPassword != loginDto.Password)
