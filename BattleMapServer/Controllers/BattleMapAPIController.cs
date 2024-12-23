@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using BattleMapServer.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections.ObjectModel;
 namespace BattleMapServer.Controllers
 {
     [Route("api")]
@@ -88,5 +89,25 @@ namespace BattleMapServer.Controllers
             }
 
         }
+
+        [HttpGet("getMonsters")]
+        public IActionResult GetMonsters(int userID)
+        {
+            try
+            {
+                ObservableCollection<DTO.Monster> dtoMonsters = new ObservableCollection<DTO.Monster>();
+                ObservableCollection<Monster> modelMonsters = new ObservableCollection<Monster>( context.Monsters.Where(m => m.UserId == userID || m.UserId == 1).ToList());
+                foreach (Monster monster in modelMonsters)
+                {
+                    dtoMonsters.Add(new DTO.Monster(monster));
+                }
+                return Ok(dtoMonsters);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
