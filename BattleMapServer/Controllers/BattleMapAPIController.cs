@@ -109,5 +109,24 @@ namespace BattleMapServer.Controllers
             }
         }
 
+        [HttpGet("getCharacters")]
+        public IActionResult GetCharacters(int userID)
+        {
+            try
+            {
+                ObservableCollection<DTO.Character> dtoCharacters = new ObservableCollection<DTO.Character>();
+                ObservableCollection<Character> modelCharacters = new ObservableCollection<Character>(context.Characters.Where(m => m.UserId == userID).ToList());
+                foreach (Character character in modelCharacters)
+                {
+                    dtoCharacters.Add(new DTO.Character(character));
+                }
+                return Ok(dtoCharacters);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
