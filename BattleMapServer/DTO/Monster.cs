@@ -58,5 +58,30 @@ namespace BattleMapServer.DTO
 
         }
 
+        public Models.Monster GetModels()
+        {
+            Models.Monster modelsMonster = new Models.Monster()
+            {
+                MonsterId = this.MonsterId,
+                UserId = this.UserId,
+                MonsterName = this.MonsterName,
+                MonsterPic = this.MonsterPic,
+                Ac = this.Ac,
+                Hp = this.Hp,
+                Str = this.Str,
+                Dex = this.Dex,
+                Con = this.Con,
+                Int = this.Int,
+                Wis = this.Wis,
+                Cha = this.Cha,
+                Cr = this.Cr,
+                PassiveDesc = this.PassiveDesc,
+                ActionDesc = this.ActionDesc,
+                SpecialActionDesc = this.SpecialActionDesc,
+            };
+
+            return modelsMonster;
+        }
+
     }
 }

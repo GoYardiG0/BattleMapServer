@@ -90,6 +90,53 @@ namespace BattleMapServer.Controllers
 
         }
 
+        [HttpPost("AddMonster")]
+        public IActionResult AddMonster([FromBody] DTO.Monster monsterDto)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Create model user class
+                Models.Monster modelsMonster = monsterDto.GetModels();
+
+                context.Monsters.Add(modelsMonster);
+                context.SaveChanges();
+
+                //User was added!
+                DTO.Monster dtoMonster = new DTO.Monster(modelsMonster);
+                return Ok(dtoMonster);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        [HttpPost("AddCharacter")]
+        public IActionResult AddCharacter([FromBody] DTO.Character characterDto)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Create model user class
+                Models.Character modelsCharacter = characterDto.GetModels();
+
+                context.Characters.Add(modelsCharacter);
+                context.SaveChanges();
+
+                //User was added!
+                DTO.Character dtoCharacter = new DTO.Character(modelsCharacter);
+                return Ok(dtoCharacter);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
         [HttpGet("getMonsters")]
         public IActionResult GetMonsters(int userID)
         {

@@ -60,5 +60,30 @@ namespace BattleMapServer.DTO
             this.SpecialActionDesc = modelCharacter.SpecialActionDesc;
 
         }
+
+        public Models.Character GetModels()
+        {
+            Models.Character modelsCharacter = new Models.Character()
+            {
+                CharacterId = this.CharacterId,
+                UserId = this.UserId,
+                CharacterName = this.CharacterName,
+                CharacterPic = this.CharacterPic,
+                Ac = this.Ac,
+                Hp = this.Hp,
+                Str = this.Str,
+                Dex = this.Dex,
+                Con = this.Con,
+                Int = this.Int,
+                Wis = this.Wis,
+                Cha = this.Cha,
+                Level = this.Level,
+                PassiveDesc = this.PassiveDesc,
+                ActionDesc = this.ActionDesc,
+                SpecialActionDesc = this.SpecialActionDesc,
+            };
+
+            return modelsCharacter;
+        }
     }
 }
