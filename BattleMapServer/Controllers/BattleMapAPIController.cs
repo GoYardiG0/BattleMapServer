@@ -81,7 +81,7 @@ namespace BattleMapServer.Controllers
                 context.SaveChanges();
 
                 //User was added!
-                DTO.User dtoUser = new DTO.User(modelsUser);
+                DTO.User dtoUser = new DTO.User(modelsUser);                
                 return Ok(dtoUser);
             }
             catch (Exception ex)
@@ -106,6 +106,7 @@ namespace BattleMapServer.Controllers
 
                 //User was added!
                 DTO.Monster dtoMonster = new DTO.Monster(modelsMonster);
+                dtoMonster.MonsterPic = GetProfileImageVirtualPath(dtoMonster.MonsterId);
                 return Ok(dtoMonster);
             }
             catch (Exception ex)
@@ -129,6 +130,7 @@ namespace BattleMapServer.Controllers
 
                 //User was added!
                 DTO.Character dtoCharacter = new DTO.Character(modelsCharacter);
+                dtoCharacter.CharacterPic = GetProfileImageVirtualPath(dtoCharacter.CharacterId);
                 return Ok(dtoCharacter);
             }
             catch (Exception ex)
