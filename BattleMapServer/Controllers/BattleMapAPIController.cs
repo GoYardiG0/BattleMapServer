@@ -106,7 +106,7 @@ namespace BattleMapServer.Controllers
 
                 //User was added!
                 DTO.Monster dtoMonster = new DTO.Monster(modelsMonster);
-                dtoMonster.MonsterPic = GetProfileImageVirtualPath(dtoMonster.MonsterId);
+               // dtoMonster.MonsterPic = GetProfileImageVirtualPath(dtoMonster.MonsterId);
                 return Ok(dtoMonster);
             }
             catch (Exception ex)
@@ -130,7 +130,7 @@ namespace BattleMapServer.Controllers
 
                 //User was added!
                 DTO.Character dtoCharacter = new DTO.Character(modelsCharacter);
-                dtoCharacter.CharacterPic = GetProfileImageVirtualPath(dtoCharacter.CharacterId);
+                //dtoCharacter.CharacterPic = GetProfileImageVirtualPath(dtoCharacter.CharacterId);
                 return Ok(dtoCharacter);
             }
             catch (Exception ex)
@@ -140,7 +140,7 @@ namespace BattleMapServer.Controllers
 
         }
 
-        [HttpGet("getMonsters")]
+        [HttpPost("getMonsters")]
         public IActionResult GetMonsters(int userID)
         {
             try
@@ -310,32 +310,81 @@ namespace BattleMapServer.Controllers
             return false;
         }
 
-        //this function check which profile image exist and return the virtual path of it.
-        //if it does not exist it returns the default profile image virtual path
-        private string GetProfileImageVirtualPath(int userId)
+        ////this function check which profile image exist and return the virtual path of it.
+        ////if it does not exist it returns the default profile image virtual path
+        //private string GetProfileImageVirtualPath(int userId)
+        //{
+        //    string virtualPath = $"/profileImages/{userId}";
+        //    string path = $"{this.webHostEnvironment.WebRootPath}\\profileImages\\{userId}.png";
+        //    if (System.IO.File.Exists(path))
+        //    {
+        //        virtualPath += ".png";
+        //    }
+        //    else
+        //    {
+        //        path = $"{this.webHostEnvironment.WebRootPath}\\profileImages\\{userId}.jpg";
+        //        if (System.IO.File.Exists(path))
+        //        {
+        //            virtualPath += ".jpg";
+        //        }
+        //        else
+        //        {
+        //            virtualPath = $"/profileImages/default.png";
+        //        }
+        //    }
+
+        //    return virtualPath;
+        //}
+
+        //THis function gets a userId and a profile image file and save the image in the server
+        //The function return the full path of the file saved
+        private async Task<string> SaveMonsterImageAsync(int userId, IFormFile file, string picname)
         {
-            string virtualPath = $"/profileImages/{userId}";
-            string path = $"{this.webHostEnvironment.WebRootPath}\\profileImages\\{userId}.png";
-            if (System.IO.File.Exists(path))
+            //Read all files sent
+            long imagesSize = 0;
+
+            if (file.Length > 0)
             {
-                virtualPath += ".png";
-            }
-            else
-            {
-                path = $"{this.webHostEnvironment.WebRootPath}\\profileImages\\{userId}.jpg";
-                if (System.IO.File.Exists(path))
+                //Check the file extention!
+                string[] allowedExtentions = { ".png", ".jpg" };
+                string extention = "";
+                if (file.FileName.LastIndexOf(".") > 0)
                 {
-                    virtualPath += ".jpg";
+                    extention = file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
                 }
-                else
+                if (!allowedExtentions.Where(e => e == extention).Any())
                 {
-                    virtualPath = $"/profileImages/default.png";
+                    //Extention is not supported
+                    throw new Exception("File sent with non supported extention");
                 }
+
+                //Build path in the web root (better to a specific folder under the web root
+                string filePath = $"{this.webHostEnvironment.WebRootPath}\\monsterImages\\{userId}_{picname}{extention}";
+
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await file.CopyToAsync(stream);
+
+                    if (IsImage(stream))
+                    {
+                        imagesSize += stream.Length;
+                    }
+                    else
+                    {
+                        //Delete the file if it is not supported!
+                        System.IO.File.Delete(filePath);
+                        throw new Exception("File sent is not an image");
+                    }
+
+                }
+
+                return filePath;
+
             }
 
-            return virtualPath;
+            throw new Exception("File in size 0");
         }
-
+        
         //THis function gets a userId and a profile image file and save the image in the server
         //The function return the full path of the file saved
         private async Task<string> SaveProfileImageAsync(int userId, IFormFile file)
