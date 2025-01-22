@@ -140,13 +140,13 @@ namespace BattleMapServer.Controllers
 
         }
 
-        [HttpPost("getMonsters")]
-        public IActionResult GetMonsters(int userID)
+        [HttpGet("getMonsters")]
+        public IActionResult GetMonsters()
         {
             try
             {
                 ObservableCollection<DTO.Monster> dtoMonsters = new ObservableCollection<DTO.Monster>();
-                ObservableCollection<Monster> modelMonsters = new ObservableCollection<Monster>( context.Monsters.Where(m => m.UserId == userID || m.UserId == 1).ToList());
+                ObservableCollection<Monster> modelMonsters = new ObservableCollection<Monster>( context.Monsters.ToList());
                 foreach (Monster monster in modelMonsters)
                 {
                     dtoMonsters.Add(new DTO.Monster(monster));
