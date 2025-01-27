@@ -67,6 +67,8 @@ namespace BattleMapServer.Controllers
             }
 
         }
+
+        #region registers
         [HttpPost("register")]
         public IActionResult Register([FromBody] DTO.User userDto)
         {
@@ -91,8 +93,9 @@ namespace BattleMapServer.Controllers
 
         }
 
+        
         [HttpPost("AddMonster")]
-        public IActionResult AddMonster([FromBody] DTO.Monster monsterDto)
+        public async Task<IActionResult> AddMonster([FromBody] DTO.Monster monsterDto, IFormFile file)
         {
             try
             {
@@ -106,7 +109,8 @@ namespace BattleMapServer.Controllers
 
                 //User was added!
                 DTO.Monster dtoMonster = new DTO.Monster(modelsMonster);
-               // dtoMonster.MonsterPic = GetProfileImageVirtualPath(dtoMonster.MonsterId);
+                await SaveMonsterImageAsync(dtoMonster.UserId, dtoMonster.MonsterName, file);
+                dtoMonster.MonsterPic = GetMonsterImageVirtualPath(dtoMonster.UserId, dtoMonster.MonsterName);
                 return Ok(dtoMonster);
             }
             catch (Exception ex)
@@ -140,6 +144,9 @@ namespace BattleMapServer.Controllers
 
         }
 
+        #endregion
+
+        #region Get things
         [HttpGet("getMonsters")]
         public IActionResult GetMonsters()
         {
@@ -177,7 +184,7 @@ namespace BattleMapServer.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        #endregion
         //Helper functions
         #region Backup / Restore
         [HttpGet("Backup")]
@@ -282,6 +289,7 @@ namespace BattleMapServer.Controllers
         }
         #endregion
 
+        #region images
         //this function gets a file stream and check if it is an image
         private static bool IsImage(Stream stream)
         {
@@ -310,35 +318,35 @@ namespace BattleMapServer.Controllers
             return false;
         }
 
-        ////this function check which profile image exist and return the virtual path of it.
-        ////if it does not exist it returns the default profile image virtual path
-        //private string GetProfileImageVirtualPath(int userId)
-        //{
-        //    string virtualPath = $"/profileImages/{userId}";
-        //    string path = $"{this.webHostEnvironment.WebRootPath}\\profileImages\\{userId}.png";
-        //    if (System.IO.File.Exists(path))
-        //    {
-        //        virtualPath += ".png";
-        //    }
-        //    else
-        //    {
-        //        path = $"{this.webHostEnvironment.WebRootPath}\\profileImages\\{userId}.jpg";
-        //        if (System.IO.File.Exists(path))
-        //        {
-        //            virtualPath += ".jpg";
-        //        }
-        //        else
-        //        {
-        //            virtualPath = $"/profileImages/default.png";
-        //        }
-        //    }
+        //this function check which profile image exist and return the virtual path of it.
+        //if it does not exist it returns the default profile image virtual path
+        private string GetMonsterImageVirtualPath(int userId, string monsterName)
+        {
+            string virtualPath = $"/monsterImages/{userId}";
+            string path = $"{this.webHostEnvironment.WebRootPath}\\monsterImages\\{userId}_{monsterName}.png";
+            if (System.IO.File.Exists(path))
+            {
+                virtualPath += ".png";
+            }
+            else
+            {
+                path = $"{this.webHostEnvironment.WebRootPath}\\monsterImages\\{userId}_{monsterName}.jpg";
+                if (System.IO.File.Exists(path))
+                {
+                    virtualPath += ".jpg";
+                }
+                else
+                {
+                    virtualPath = $"/monsterImages/default.png";
+                }
+            }
 
-        //    return virtualPath;
-        //}
+            return virtualPath;
+        }
 
         //THis function gets a userId and a profile image file and save the image in the server
         //The function return the full path of the file saved
-        private async Task<string> SaveMonsterImageAsync(int userId, IFormFile file, string picname)
+        private async Task<string> SaveMonsterImageAsync(int userId,string monsterName, IFormFile file)
         {
             //Read all files sent
             long imagesSize = 0;
@@ -359,7 +367,7 @@ namespace BattleMapServer.Controllers
                 }
 
                 //Build path in the web root (better to a specific folder under the web root
-                string filePath = $"{this.webHostEnvironment.WebRootPath}\\monsterImages\\{userId}_{picname}{extention}";
+                string filePath = $"{this.webHostEnvironment.WebRootPath}\\monsterImages\\{userId}_{monsterName}{extention}";
 
                 using (var stream = System.IO.File.Create(filePath))
                 {
@@ -433,6 +441,7 @@ namespace BattleMapServer.Controllers
 
             throw new Exception("File in size 0");
         }
+        #endregion
     }
 }
 

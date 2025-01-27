@@ -6,7 +6,7 @@ namespace BattleMapServer.DTO
     {
         public int MonsterId { get; set; }
 
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
 
         public string MonsterName { get; set; } = null!;
 

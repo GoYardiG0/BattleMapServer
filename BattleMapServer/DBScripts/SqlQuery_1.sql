@@ -103,17 +103,25 @@ UserId int foreign Key References Users(UserId),
 FriendId int
 )
 go
+
 insert into Users (UserName,UserEmail,UserPassword) Values ('admin', 'yarden.golan07@gmail.com', 'admin')
 go
 
+-- Create a login for the admin user
 CREATE LOGIN [MapAdminLogin] WITH PASSWORD = 'AdminPassword';
 Go
 
+-- Create a user in the TasksManagementDB database for the login
 CREATE USER [AdminUser] FOR LOGIN [MapAdminLogin];
 Go
 
+-- Add the user to the db_owner role to grant admin privileges
 ALTER ROLE db_owner ADD MEMBER [AdminUser];
 Go
+--so user can restore the DB!
+ALTER SERVER ROLE sysadmin ADD MEMBER [MapAdminLogin];
+Go
+
 
 
 select * from Users
