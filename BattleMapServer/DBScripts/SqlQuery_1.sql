@@ -29,7 +29,7 @@ Create Table Monsters
 (
 MonsterId int Primary Key Identity,
 
-UserId int foreign Key References Users(UserId) ,
+UserId int foreign Key References Users(UserId) Not Null,
 
 MonsterName nvarchar(50) Unique Not Null,
 
@@ -69,7 +69,7 @@ UserId int foreign Key References Users(UserId) ,
 
 CharacterName nvarchar(50) Unique Not Null,
 
-CharacterPic nvarchar(100),
+CharacterPic nvarchar(100) not null,
 
 AC int not null,
 
@@ -89,9 +89,9 @@ cha int not null,
 
 [level] int not null,
 
-passive_desc nvarchar(1000),
+passive_desc nvarchar(1000) not null,
 
-action_desc nvarchar(1000),
+action_desc nvarchar(1000) not null,
 
 special_action_desc  nvarchar(1000)
 

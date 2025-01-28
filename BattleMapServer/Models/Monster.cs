@@ -12,7 +12,7 @@ public partial class Monster
     [Key]
     public int MonsterId { get; set; }
 
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
 
     [StringLength(50)]
     public string MonsterName { get; set; } = null!;

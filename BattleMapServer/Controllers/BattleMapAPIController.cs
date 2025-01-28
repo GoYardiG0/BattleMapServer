@@ -58,7 +58,7 @@ namespace BattleMapServer.Controllers
                 //Login suceed! now mark login in session memory!
                 HttpContext.Session.SetString("loggedInUser", modelsUser.UserEmail);
 
-                DTO.User dtoUser = new DTO.User(modelsUser);               
+                DTO.User dtoUser = new DTO.User(modelsUser);
                 return Ok(dtoUser);
             }
             catch (Exception ex)
@@ -83,7 +83,7 @@ namespace BattleMapServer.Controllers
                 context.SaveChanges();
 
                 //User was added!
-                DTO.User dtoUser = new DTO.User(modelsUser);                
+                DTO.User dtoUser = new DTO.User(modelsUser);
                 return Ok(dtoUser);
             }
             catch (Exception ex)
@@ -93,9 +93,9 @@ namespace BattleMapServer.Controllers
 
         }
 
-        
+
         [HttpPost("AddMonster")]
-        public async Task<IActionResult> AddMonster([FromBody] DTO.Monster monsterDto, IFormFile file)
+        public async Task<IActionResult> AddMonster([FromBody] DTO.Monster monsterDto)
         {
             try
             {
@@ -109,7 +109,6 @@ namespace BattleMapServer.Controllers
 
                 //User was added!
                 DTO.Monster dtoMonster = new DTO.Monster(modelsMonster);
-                await SaveMonsterImageAsync(dtoMonster.UserId, dtoMonster.MonsterName, file);
                 dtoMonster.MonsterPic = GetMonsterImageVirtualPath(dtoMonster.UserId, dtoMonster.MonsterName);
                 return Ok(dtoMonster);
             }
@@ -146,6 +145,27 @@ namespace BattleMapServer.Controllers
 
         #endregion
 
+        #region updaters
+
+        [HttpPost("updateMonster")]
+        public IActionResult UpdateMonster([FromBody] DTO.Monster monsterDto)
+        {
+
+            try
+            {
+                Monster? monster = context.Monsters.Where(m => m.MonsterId == monsterDto.MonsterId).FirstOrDefault();
+                monster.ReSetMonster(monsterDto);
+                context.SaveChanges();
+                return Ok(monster);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
+
         #region Get things
         [HttpGet("getMonsters")]
         public IActionResult GetMonsters()
@@ -153,7 +173,7 @@ namespace BattleMapServer.Controllers
             try
             {
                 ObservableCollection<DTO.Monster> dtoMonsters = new ObservableCollection<DTO.Monster>();
-                ObservableCollection<Monster> modelMonsters = new ObservableCollection<Monster>( context.Monsters.ToList());
+                ObservableCollection<Monster> modelMonsters = new ObservableCollection<Monster>(context.Monsters.ToList());
                 foreach (Monster monster in modelMonsters)
                 {
                     dtoMonsters.Add(new DTO.Monster(monster));
@@ -320,6 +340,7 @@ namespace BattleMapServer.Controllers
 
         //this function check which profile image exist and return the virtual path of it.
         //if it does not exist it returns the default profile image virtual path
+
         private string GetMonsterImageVirtualPath(int userId, string monsterName)
         {
             string virtualPath = $"/monsterImages/{userId}";
@@ -346,51 +367,59 @@ namespace BattleMapServer.Controllers
 
         //THis function gets a userId and a profile image file and save the image in the server
         //The function return the full path of the file saved
-        private async Task<string> SaveMonsterImageAsync(int userId,string monsterName, IFormFile file)
+        [HttpPost("uploadMonsterImage")]
+        public async Task<IActionResult> UploadMonsterImage(IFormFile file, [FromQuery] string monsterName, [FromQuery] int userId)
         {
             //Read all files sent
             long imagesSize = 0;
-
-            if (file.Length > 0)
+            try
             {
-                //Check the file extention!
-                string[] allowedExtentions = { ".png", ".jpg" };
-                string extention = "";
-                if (file.FileName.LastIndexOf(".") > 0)
+                if (file.Length > 0)
                 {
-                    extention = file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
-                }
-                if (!allowedExtentions.Where(e => e == extention).Any())
-                {
-                    //Extention is not supported
-                    throw new Exception("File sent with non supported extention");
-                }
-
-                //Build path in the web root (better to a specific folder under the web root
-                string filePath = $"{this.webHostEnvironment.WebRootPath}\\monsterImages\\{userId}_{monsterName}{extention}";
-
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    await file.CopyToAsync(stream);
-
-                    if (IsImage(stream))
+                    //Check the file extention!
+                    string[] allowedExtentions = { ".png", ".jpg" };
+                    string extention = "";
+                    if (file.FileName.LastIndexOf(".") > 0)
                     {
-                        imagesSize += stream.Length;
+                        extention = file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
                     }
-                    else
+                    if (!allowedExtentions.Where(e => e == extention).Any())
                     {
-                        //Delete the file if it is not supported!
-                        System.IO.File.Delete(filePath);
-                        throw new Exception("File sent is not an image");
+                        //Extention is not supported
+                        return BadRequest("File sent with non supported extention");
                     }
 
+                    //Build path in the web root (better to a specific folder under the web root
+                    string filePath = $"{this.webHostEnvironment.WebRootPath}\\monsterImages\\{userId}_{monsterName}{extention}";
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await file.CopyToAsync(stream);
+
+                        if (IsImage(stream))
+                        {
+                            imagesSize += stream.Length;
+                        }
+                        else
+                        {
+                            //Delete the file if it is not supported!
+                            System.IO.File.Delete(filePath);
+                            return BadRequest("File sent is not an image");
+                        }
+
+                    }
+
+                    return Ok(filePath);
+
                 }
 
-                return filePath;
-
+                return BadRequest("File in size 0");
             }
-
-            throw new Exception("File in size 0");
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
         
         //THis function gets a userId and a profile image file and save the image in the server
