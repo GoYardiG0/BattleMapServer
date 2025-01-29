@@ -391,6 +391,7 @@ namespace BattleMapServer.Controllers
 
                     //Build path in the web root (better to a specific folder under the web root
                     string filePath = $"{this.webHostEnvironment.WebRootPath}\\monsterImages\\{userId}_{monsterName}{extention}";
+                    string virtualFilePath = $"/monsterImages/{userId}_{monsterName}{extention}";
 
                     using (var stream = System.IO.File.Create(filePath))
                     {
@@ -409,7 +410,7 @@ namespace BattleMapServer.Controllers
 
                     }
 
-                    return Ok(filePath);
+                    return Ok(virtualFilePath);
 
                 }
 
@@ -421,7 +422,92 @@ namespace BattleMapServer.Controllers
             }
             
         }
-        
+
+        //this function check which profile image exist and return the virtual path of it.
+        //if it does not exist it returns the default profile image virtual path
+
+        private string GetCharacterImageVirtualPath(int userId, string characterName)
+        {
+            string virtualPath = $"/monsterImages/{userId}";
+            string path = $"{this.webHostEnvironment.WebRootPath}\\characterImages\\{userId}_{characterName}.png";
+            if (System.IO.File.Exists(path))
+            {
+                virtualPath += ".png";
+            }
+            else
+            {
+                path = $"{this.webHostEnvironment.WebRootPath}\\characterImages\\{userId}_{characterName}.jpg";
+                if (System.IO.File.Exists(path))
+                {
+                    virtualPath += ".jpg";
+                }
+                else
+                {
+                    virtualPath = $"/characterImages/default.png";
+                }
+            }
+
+            return virtualPath;
+        }
+
+        //THis function gets a userId and a profile image file and save the image in the server
+        //The function return the full path of the file saved
+        [HttpPost("uploadCharacterImage")]
+        public async Task<IActionResult> UploadCharacterImage(IFormFile file, [FromQuery] string characterName, [FromQuery] int userId)
+        {
+            //Read all files sent
+            long imagesSize = 0;
+            try
+            {
+                if (file.Length > 0)
+                {
+                    //Check the file extention!
+                    string[] allowedExtentions = { ".png", ".jpg" };
+                    string extention = "";
+                    if (file.FileName.LastIndexOf(".") > 0)
+                    {
+                        extention = file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
+                    }
+                    if (!allowedExtentions.Where(e => e == extention).Any())
+                    {
+                        //Extention is not supported
+                        return BadRequest("File sent with non supported extention");
+                    }
+
+                    //Build path in the web root (better to a specific folder under the web root
+                    string filePath = $"{this.webHostEnvironment.WebRootPath}\\characterImages\\{userId}_{characterName}{extention}";
+                    string virtualFilePath = $"/characterImages/{userId}_{characterName}{extention}";
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await file.CopyToAsync(stream);
+
+                        if (IsImage(stream))
+                        {
+                            imagesSize += stream.Length;
+                        }
+                        else
+                        {
+                            //Delete the file if it is not supported!
+                            System.IO.File.Delete(filePath);
+                            return BadRequest("File sent is not an image");
+                        }
+
+                    }
+
+                    return Ok(virtualFilePath);
+
+                }
+
+                return BadRequest("File in size 0");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
         //THis function gets a userId and a profile image file and save the image in the server
         //The function return the full path of the file saved
         private async Task<string> SaveProfileImageAsync(int userId, IFormFile file)

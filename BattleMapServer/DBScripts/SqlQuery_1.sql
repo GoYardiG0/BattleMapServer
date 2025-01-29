@@ -105,6 +105,7 @@ FriendId int
 go
 
 insert into Users (UserName,UserEmail,UserPassword) Values ('admin', 'yarden.golan07@gmail.com', 'admin')
+insert into Users (UserName,UserEmail,UserPassword) Values ('test', 'test@gmail.com', 'test')
 go
 
 -- Create a login for the admin user
