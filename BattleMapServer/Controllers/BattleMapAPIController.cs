@@ -187,12 +187,12 @@ namespace BattleMapServer.Controllers
         }
 
         [HttpGet("getCharacters")]
-        public IActionResult GetCharacters(int userID)
+        public IActionResult GetCharacters()
         {
             try
             {
                 ObservableCollection<DTO.Character> dtoCharacters = new ObservableCollection<DTO.Character>();
-                ObservableCollection<Character> modelCharacters = new ObservableCollection<Character>(context.Characters.Where(m => m.UserId == userID).ToList());
+                ObservableCollection<Character> modelCharacters = new ObservableCollection<Character>(context.Characters.ToList());
                 foreach (Character character in modelCharacters)
                 {
                     dtoCharacters.Add(new DTO.Character(character));
@@ -428,7 +428,7 @@ namespace BattleMapServer.Controllers
 
         private string GetCharacterImageVirtualPath(int userId, string characterName)
         {
-            string virtualPath = $"/monsterImages/{userId}";
+            string virtualPath = $"/characterImages/{userId}";
             string path = $"{this.webHostEnvironment.WebRootPath}\\characterImages\\{userId}_{characterName}.png";
             if (System.IO.File.Exists(path))
             {
