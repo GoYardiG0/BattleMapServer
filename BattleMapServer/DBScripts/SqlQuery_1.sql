@@ -106,6 +106,8 @@ go
 
 insert into Users (UserName,UserEmail,UserPassword) Values ('admin', 'yarden.golan07@gmail.com', 'admin')
 insert into Users (UserName,UserEmail,UserPassword) Values ('test', 'test@gmail.com', 'test')
+insert into Users (UserName,UserEmail,UserPassword) Values ('tes123t', 'te23st@gmail.com', 'te23st')
+insert into Users (UserName,UserEmail,UserPassword) Values ('te232323st', 'te232323st@gmail.com', 'te23232323st')
 go
 
 -- Create a login for the admin user
