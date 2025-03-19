@@ -95,7 +95,7 @@ namespace BattleMapServer.Controllers
 
 
         [HttpPost("AddMonster")]
-        public async Task<IActionResult> AddMonster([FromBody] DTO.Monster monsterDto)
+        public IActionResult AddMonster([FromBody] DTO.Monster monsterDto)
         {
             try
             {
@@ -109,7 +109,6 @@ namespace BattleMapServer.Controllers
 
                 //User was added!
                 DTO.Monster dtoMonster = new DTO.Monster(modelsMonster);
-                dtoMonster.MonsterPic = GetMonsterImageVirtualPath(dtoMonster.UserId, dtoMonster.MonsterName);
                 return Ok(dtoMonster);
             }
             catch (Exception ex)
