@@ -103,6 +103,15 @@ namespace BattleMapServer.Controllers
 
                 //Create model user class
                 Models.Monster modelsMonster = monsterDto.GetModels();
+                List<Monster> modelMonsters = new List<Monster>(context.Monsters.ToList());
+                int nameCount = 0;
+                foreach (Monster m in modelMonsters)
+                {
+                    if (m.MonsterName.Contains(monsterDto.MonsterName))
+                        nameCount++;
+                }
+                if (nameCount > 0)
+                    modelsMonster.MonsterName += $"({nameCount})";
 
                 context.Monsters.Add(modelsMonster);
                 context.SaveChanges();
