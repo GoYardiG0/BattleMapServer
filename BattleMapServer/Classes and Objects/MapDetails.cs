@@ -17,5 +17,6 @@ namespace BattleMapServer.Classes_and_Objects
             this.allMinis = allMinis;
             this.lines = lines;
         }
+        public MapDetails() { }
     }
 }
