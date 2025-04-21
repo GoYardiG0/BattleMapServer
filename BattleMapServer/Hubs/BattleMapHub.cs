@@ -29,7 +29,7 @@ namespace BattleMapServer.Hubs
         {
             mapDetails = details;
 
-            await Clients.Group(groupName).SendAsync("UpdateMap", details);
+            await Clients.All.SendAsync("UpdateMap", details);
         }
 
         public async Task RemoveFromGroup(string groupName)
