@@ -16,5 +16,6 @@ namespace BattleMapServer.Classes_and_Objects
             this.start = new Point(start.X,start.Y);
             this.end = new Point(end.X,end.Y);
         }
+        public Line() { }
     }
 }

@@ -1,4 +1,5 @@
 
+using BattleMapServer.Hubs;
 using BattleMapServer.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ namespace BattleMapServer
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddSignalR();
 
             #region Add Database context to Dependency Injection
             //Read connection string from app settings.json
@@ -61,6 +63,7 @@ namespace BattleMapServer
             app.UseHttpsRedirection();
             app.UseStaticFiles(); //Support static files delivery from wwwroot folder
             app.MapControllers(); //Map all controllers classes
+            app.MapHub<BattleMapHub>("BattleMapHub");
 
             // Configure the application to listen on all network interfaces
             // Also note the changes in launchSettings.json

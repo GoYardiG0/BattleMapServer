@@ -1,5 +1,4 @@
-﻿using BattleMapServer.Classes_and_Objects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +8,13 @@ namespace BattleMapServer.Classes_and_Objects
 {
     public class MapDetails
     {
-        public Mini[,] allMinis;
-        public List<Line> lines;
-
-        public MapDetails(Mini[,] allMinis, List<Line> lines)
+        public List<List<Mini>> AllMinis
         {
-            this.allMinis = allMinis;
-            this.lines = lines;
+            get; set;
+        }
+        public List<Line> Lines
+        {
+            get; set;
         }
         public MapDetails() { }
     }

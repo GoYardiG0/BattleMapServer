@@ -46,5 +46,6 @@ namespace BattleMapServer.Classes_and_Objects
 
         public string? SpecialActionDesc { get; set; }
         
+        public Mini() { }
     }
 }

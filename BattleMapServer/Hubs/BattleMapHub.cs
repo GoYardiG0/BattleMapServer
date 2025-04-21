@@ -3,6 +3,7 @@ using BattleMapServer.Models;
 using Microsoft.AspNetCore.SignalR;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BattleMapServer.Hubs
 {
@@ -14,7 +15,6 @@ namespace BattleMapServer.Hubs
         public BattleMapHub(BattleMapDbContext context)
         {
             this.context = context;
-            mapDetails = new MapDetails();
         }
 
         public async Task AddToGroup(string groupName)
