@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace BattleMapServer.Hubs
 {
@@ -21,6 +22,7 @@ namespace BattleMapServer.Hubs
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
             
+            
             if (mapDetails != null)
                 await Clients.Client(Context.ConnectionId).SendAsync("UpdateMap", mapDetails);
         }
@@ -29,7 +31,7 @@ namespace BattleMapServer.Hubs
         {
             mapDetails = details;
 
-            await Clients.All.SendAsync("UpdateMap", details);
+            await Clients.Group(groupName).SendAsync("UpdateMap", details);
         }
 
         public async Task RemoveFromGroup(string groupName)

@@ -9,13 +9,21 @@ namespace BattleMapServer.Classes_and_Objects
 {
     public class Line
     {
-        public Point start;
-        public Point end;
+        public Point start
+        {
+            get; set;
+        }
+        public Point end
+        {
+            get; set;
+        }
         public Line(Point start, Point end)
         {
-            this.start = new Point(start.X,start.Y);
-            this.end = new Point(end.X,end.Y);
+            this.start = new Point(start.X, start.Y);
+            this.end = new Point(end.X, end.Y);
         }
-        public Line() { }
+        public Line()
+        {
+        }
     }
 }
