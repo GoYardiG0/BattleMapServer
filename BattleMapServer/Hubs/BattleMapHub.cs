@@ -5,31 +5,55 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BattleMapServer.Hubs
 {
     public class BattleMapHub: Hub
     {
         private BattleMapDbContext context;
-        private MapDetails mapDetails;
+        private static List<HubGroup> hubGroups;
 
         public BattleMapHub(BattleMapDbContext context)
         {
             this.context = context;
         }
 
-        public async Task AddToGroup(string groupName)
+        public async Task<string> AddToGroup(string groupName, int userId, bool isCreator)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            
-            
-            if (mapDetails != null)
-                await Clients.Client(Context.ConnectionId).SendAsync("UpdateMap", mapDetails);
+            if (hubGroups.Where(g => g.Name == groupName).IsNullOrEmpty())
+            {
+                if (isCreator)
+                {
+                    hubGroups.Add(new HubGroup(groupName));
+                    await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+                }
+                else
+                {
+                    return "group doesnt exist";
+                }
+            }
+            else if (isCreator)
+            {
+                return "group already exists";
+            }
+            else
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            }            
+
+            if (hubGroups.Where(g => g.Name == groupName).FirstOrDefault().Details != null)
+                await Clients.Client(Context.ConnectionId).SendAsync("UpdateMap", hubGroups.Where(g => g.Name == groupName).FirstOrDefault().Details);
+            User modelsUser = context.Users.Where(u => u.UserId == userId).FirstOrDefault();
+            DTO.User dtoUser = new DTO.User(modelsUser);
+            await Clients.Group(groupName).SendAsync("UpdateUsers", dtoUser);
+
+            return "";
         }
 
         public async Task UpdateMapDetails(MapDetails details, string groupName)
         {
-            mapDetails = details;
+            hubGroups.Where(g => g.Name == groupName).FirstOrDefault().Details = details;
 
             await Clients.Group(groupName).SendAsync("UpdateMap", details);
         }
