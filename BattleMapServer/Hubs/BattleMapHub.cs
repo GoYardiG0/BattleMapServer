@@ -12,7 +12,7 @@ namespace BattleMapServer.Hubs
     public class BattleMapHub: Hub
     {
         private BattleMapDbContext context;
-        private static List<HubGroup> hubGroups;
+        private static List<HubGroup> hubGroups = new List<HubGroup>();
 
         public BattleMapHub(BattleMapDbContext context)
         {
@@ -53,8 +53,10 @@ namespace BattleMapServer.Hubs
 
         public async Task UpdateMapDetails(MapDetails details, string groupName)
         {
-            hubGroups.Where(g => g.Name == groupName).FirstOrDefault().Details = details;
-
+            lock(hubGroups.Where(g => g.Name == groupName).FirstOrDefault().Details)
+            {
+                hubGroups.Where(g => g.Name == groupName).FirstOrDefault().Details = details;
+            }            
             await Clients.Group(groupName).SendAsync("UpdateMap", details);
         }
 
