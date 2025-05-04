@@ -16,6 +16,6 @@ namespace BattleMapServer.Classes_and_Objects
         {
             get; set;
         }
-        public MapDetails() { }
+        public MapDetails() { Lines = new List<Line>(); }
     }
 }
