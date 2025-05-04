@@ -19,36 +19,44 @@ namespace BattleMapServer.Hubs
             this.context = context;
         }
 
-        public async Task<string> AddToGroup(string groupName, int userId, bool isCreator)
+        public async Task<string?> AddToGroup(string groupName, int userId, bool isCreator)
         {
-            if (hubGroups.Where(g => g.Name == groupName).IsNullOrEmpty())
+            try
             {
-                if (isCreator)
+                if (hubGroups.Where(g => g.Name == groupName).IsNullOrEmpty())
                 {
-                    hubGroups.Add(new HubGroup(groupName));
-                    await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+                    if (isCreator)
+                    {
+                        hubGroups.Add(new HubGroup(groupName));
+                        await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+                    }
+                    else
+                    {
+                        return "group doesnt exist";
+                    }
+                }
+                else if (isCreator)
+                {
+                    return "group already exists";
                 }
                 else
                 {
-                    return "group doesnt exist";
+                    await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
                 }
-            }
-            else if (isCreator)
-            {
-                return "group already exists";
-            }
-            else
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            }            
 
-            if (hubGroups.Where(g => g.Name == groupName).FirstOrDefault().Details != null)
-                await Clients.Client(Context.ConnectionId).SendAsync("UpdateMap", hubGroups.Where(g => g.Name == groupName).FirstOrDefault().Details);
-            User modelsUser = context.Users.Where(u => u.UserId == userId).FirstOrDefault();
-            DTO.User dtoUser = new DTO.User(modelsUser);
-            await Clients.Group(groupName).SendAsync("UpdateUsers", dtoUser);
+                //if (hubGroups.Where(g => g.Name == groupName).FirstOrDefault().Details != null)
+                //    await Clients.Client(Context.ConnectionId).SendAsync("UpdateMap", hubGroups.Where(g => g.Name == groupName).FirstOrDefault().Details);
+                User modelsUser = context.Users.Where(u => u.UserId == userId).FirstOrDefault();
+                DTO.User dtoUser = new DTO.User(modelsUser);
+                await Clients.Group(groupName).SendAsync("UpdateUsers", dtoUser);
 
-            return "";
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            
         }
 
         public async Task UpdateMapDetails(MapDetails details, string groupName)
