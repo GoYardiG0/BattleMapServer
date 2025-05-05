@@ -99,9 +99,6 @@ namespace BattleMapServer.Controllers
         {
             try
             {
-                HttpContext.Session.Clear(); //Logout any previous login attempt
-
-                //Create model user class
                 Models.Monster modelsMonster = monsterDto.GetModels();
                 List<Monster> modelMonsters = new List<Monster>(context.Monsters.ToList());
                 int nameCount = 0;
@@ -131,10 +128,17 @@ namespace BattleMapServer.Controllers
         {
             try
             {
-                HttpContext.Session.Clear(); //Logout any previous login attempt
-
-                //Create model user class
                 Models.Character modelsCharacter = characterDto.GetModels();
+
+                List<Character> modelCharacters = new List<Character>(context.Characters.ToList());
+                int nameCount = 0;
+                foreach (Character c in modelCharacters)
+                {
+                    if (c.CharacterName.Contains(characterDto.CharacterName))
+                        nameCount++;
+                }
+                if (nameCount > 0)
+                    modelsCharacter.CharacterName += $"({nameCount})";
 
                 context.Characters.Add(modelsCharacter);
                 context.SaveChanges();
@@ -165,6 +169,23 @@ namespace BattleMapServer.Controllers
                 monster.ReSetMonster(monsterDto);
                 context.SaveChanges();
                 return Ok(monster);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("updateCharacter")]
+        public IActionResult UpdateCharacter([FromBody] DTO.Character characterDto)
+        {
+
+            try
+            {
+                Character? character = context.Characters.Where(m => m.CharacterId == characterDto.CharacterId).FirstOrDefault();
+                character.ReSetCharacter(characterDto);
+                context.SaveChanges();
+                return Ok(character);
             }
             catch (Exception ex)
             {
@@ -451,7 +472,7 @@ namespace BattleMapServer.Controllers
                 }
                 else
                 {
-                    virtualPath = $"/characterImages/default.png";
+                    virtualPath = $"/characterImages/deafult_character.png";
                 }
             }
 
