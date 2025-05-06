@@ -100,7 +100,7 @@ namespace BattleMapServer.Controllers
             try
             {
                 Models.Monster modelsMonster = monsterDto.GetModels();
-                List<Monster> modelMonsters = new List<Monster>(context.Monsters.ToList());
+                List<Monster> modelMonsters = new List<Monster>(context.Monsters.Where(m => m.UserId == monsterDto.UserId).ToList());
                 int nameCount = 0;
                 foreach (Monster m in modelMonsters)
                 {
@@ -130,7 +130,7 @@ namespace BattleMapServer.Controllers
             {
                 Models.Character modelsCharacter = characterDto.GetModels();
 
-                List<Character> modelCharacters = new List<Character>(context.Characters.ToList());
+                List<Character> modelCharacters = new List<Character>(context.Characters.Where(c => c.UserId == characterDto.UserId).ToList());
                 int nameCount = 0;
                 foreach (Character c in modelCharacters)
                 {
@@ -438,8 +438,15 @@ namespace BattleMapServer.Controllers
                         }
 
                     }
+                    Monster modelMonster = context.Monsters.Where(m => m.MonsterName == monsterName && m.MonsterId == userId).FirstOrDefault();
+                    if (modelMonster.MonsterPic != virtualFilePath)
+                    {
+                        modelMonster.MonsterPic = virtualFilePath;
+                        context.SaveChanges();
+                    }
 
-                    return Ok(virtualFilePath);
+
+                    return Ok(modelMonster);
 
                 }
 
@@ -524,7 +531,14 @@ namespace BattleMapServer.Controllers
 
                     }
 
-                    return Ok(virtualFilePath);
+                    Character modelCharacter = context.Characters.Where(m => m.CharacterName == characterName && m.CharacterId == userId).FirstOrDefault();
+                    if (modelCharacter.CharacterPic != virtualFilePath)
+                    {
+                        modelCharacter.CharacterPic = virtualFilePath;
+                        context.SaveChanges();
+                    }
+
+                    return Ok(modelCharacter);
 
                 }
 
