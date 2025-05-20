@@ -97,13 +97,6 @@ special_action_desc  nvarchar(1000)
 
 )
 
-create table Friends
-(
-UserId int foreign Key References Users(UserId),
-FriendId int
-)
-go
-
 insert into Users (UserName,UserEmail,UserPassword) Values ('admin', 'yarden.golan07@gmail.com', 'admin')
 insert into Users (UserName,UserEmail,UserPassword) Values ('test', 'test@gmail.com', 'test')
 insert into Users (UserName,UserEmail,UserPassword) Values ('tes123t', 'te23st@gmail.com', 'te23st')
@@ -130,6 +123,5 @@ Go
 select * from Users
 select * from Monsters
 select * from Characters
-select * from Friends
 
 -- scaffold-DbContext "Server = (localdb)\MSSQLLocalDB;Initial Catalog=BattleMapDB;User ID=[MapAdminLogin];Password=AdminPassword;" Microsoft.EntityFrameworkCore.SqlServer -OutPutDir Models -Context BattleMapDbContext -DataAnnotations –force

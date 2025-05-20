@@ -67,7 +67,7 @@ namespace BattleMapServer.Hubs
             {
                 hubGroups.Where(g => g.Name == groupName).FirstOrDefault().Details = details;
             }            
-            await Clients.Group(groupName).SendAsync("UpdateMap", details);
+            await Clients.GroupExcept(groupName, Context.ConnectionId).SendAsync("UpdateMap", details);
         }
 
         public async Task<MapDetails> GetMapDetails(string groupName)

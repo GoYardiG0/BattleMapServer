@@ -16,7 +16,6 @@ Create Database BattleMapDB
 go
 
 
---select * from Users
---select * from Monsters
---select * from Characters
---select * from Friends
+select * from Users
+select * from Monsters
+select * from Characters

@@ -15,9 +15,7 @@ public partial class BattleMapDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Character> Characters { get; set; }
-
-    public virtual DbSet<Friend> Friends { get; set; }
+    public virtual DbSet<Character> Characters { get; set; }    
 
     public virtual DbSet<Monster> Monsters { get; set; }
 
@@ -34,11 +32,6 @@ public partial class BattleMapDbContext : DbContext
             entity.HasKey(e => e.CharacterId).HasName("PK__Characte__757BC9A0D13A51F8");
 
             entity.HasOne(d => d.User).WithMany(p => p.Characters).HasConstraintName("FK__Character__UserI__2D27B809");
-        });
-
-        modelBuilder.Entity<Friend>(entity =>
-        {
-            entity.HasOne(d => d.User).WithMany().HasConstraintName("FK__Friends__UserId__2F10007B");
         });
 
         modelBuilder.Entity<Monster>(entity =>
