@@ -113,7 +113,6 @@ namespace BattleMapServer.Controllers
                 context.Monsters.Add(modelsMonster);
                 context.SaveChanges();
 
-                //User was added!
                 DTO.Monster dtoMonster = new DTO.Monster(modelsMonster);
                 return Ok(dtoMonster);
             }
@@ -142,8 +141,7 @@ namespace BattleMapServer.Controllers
 
                 context.Characters.Add(modelsCharacter);
                 context.SaveChanges();
-
-                //User was added!
+                
                 DTO.Character dtoCharacter = new DTO.Character(modelsCharacter);
                 //dtoCharacter.CharacterPic = GetProfileImageVirtualPath(dtoCharacter.CharacterId);
                 return Ok(dtoCharacter);
@@ -367,8 +365,8 @@ namespace BattleMapServer.Controllers
             return false;
         }
 
-        //this function check which profile image exist and return the virtual path of it.
-        //if it does not exist it returns the default profile image virtual path
+        //this function check which monster image exist and return the virtual path of it.
+        //if it does not exist it returns the default monster image virtual path
 
         private string GetMonsterImageVirtualPath(int userId, string monsterName)
         {
@@ -394,7 +392,7 @@ namespace BattleMapServer.Controllers
             return virtualPath;
         }
 
-        //THis function gets a userId and a profile image file and save the image in the server
+        //THis function gets a userId and a monster image file and save the image in the server
         //The function return the full path of the file saved
         [HttpPost("uploadMonsterImage")]
         public async Task<IActionResult> UploadMonsterImage(IFormFile file, [FromQuery] string monsterName, [FromQuery] int userId)
@@ -459,8 +457,8 @@ namespace BattleMapServer.Controllers
             
         }
 
-        //this function check which profile image exist and return the virtual path of it.
-        //if it does not exist it returns the default profile image virtual path
+        //this function check which character image exist and return the virtual path of it.
+        //if it does not exist it returns the default character image virtual path
 
         private string GetCharacterImageVirtualPath(int userId, string characterName)
         {
@@ -486,7 +484,7 @@ namespace BattleMapServer.Controllers
             return virtualPath;
         }
 
-        //THis function gets a userId and a profile image file and save the image in the server
+        //THis function gets a userId and a character image file and save the image in the server
         //The function return the full path of the file saved
         [HttpPost("uploadCharacterImage")]
         public async Task<IActionResult> UploadCharacterImage(IFormFile file, [FromQuery] string characterName, [FromQuery] int userId)
@@ -549,56 +547,7 @@ namespace BattleMapServer.Controllers
                 return BadRequest(ex.Message);
             }
 
-        }
-
-        //THis function gets a userId and a profile image file and save the image in the server
-        //The function return the full path of the file saved
-        private async Task<string> SaveProfileImageAsync(int userId, IFormFile file)
-        {
-            //Read all files sent
-            long imagesSize = 0;
-
-            if (file.Length > 0)
-            {
-                //Check the file extention!
-                string[] allowedExtentions = { ".png", ".jpg" };
-                string extention = "";
-                if (file.FileName.LastIndexOf(".") > 0)
-                {
-                    extention = file.FileName.Substring(file.FileName.LastIndexOf(".")).ToLower();
-                }
-                if (!allowedExtentions.Where(e => e == extention).Any())
-                {
-                    //Extention is not supported
-                    throw new Exception("File sent with non supported extention");
-                }
-
-                //Build path in the web root (better to a specific folder under the web root
-                string filePath = $"{this.webHostEnvironment.WebRootPath}\\profileImages\\{userId}{extention}";
-
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    await file.CopyToAsync(stream);
-
-                    if (IsImage(stream))
-                    {
-                        imagesSize += stream.Length;
-                    }
-                    else
-                    {
-                        //Delete the file if it is not supported!
-                        System.IO.File.Delete(filePath);
-                        throw new Exception("File sent is not an image");
-                    }
-
-                }
-
-                return filePath;
-
-            }
-
-            throw new Exception("File in size 0");
-        }
+        }       
         #endregion
     }
 }
