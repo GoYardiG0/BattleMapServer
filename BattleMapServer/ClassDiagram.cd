@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BattleMapServer.Models.BattleMapDbContext" Collapsed="true">
+    <Position X="11.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAACAAAQAQAAAAAAAAAAAAEAAAAAAAEQAAAAAAAAA=</HashCode>
+      <FileName>Models\BattleMapDbContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleMapServer.Models.Character" Collapsed="true">
+    <Position X="13.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>RAABAACAAAAAQAiAAEAAAAgAYAEAAAEBgAAAAAAAQGA=</HashCode>
+      <FileName>Models\Character.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleMapServer.Models.Monster" Collapsed="true">
+    <Position X="11.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>RCABAACAAQAAAACAAEAAEAgAIAEAAAACgAAAABAAQGA=</HashCode>
+      <FileName>Models\Monster.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleMapServer.Models.User" Collapsed="true">
+    <Position X="13.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAQAACAIAAAA=</HashCode>
+      <FileName>Models\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
