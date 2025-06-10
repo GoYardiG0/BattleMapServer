@@ -437,7 +437,7 @@ namespace BattleMapServer.Controllers
 
                     }
                     Monster modelMonster = context.Monsters.Where(m => m.MonsterName == monsterName && m.MonsterId == userId).FirstOrDefault();
-                    if (modelMonster.MonsterPic != virtualFilePath)
+                    if (modelMonster != null && modelMonster.MonsterPic != virtualFilePath)
                     {
                         modelMonster.MonsterPic = virtualFilePath;
                         context.SaveChanges();
@@ -530,7 +530,7 @@ namespace BattleMapServer.Controllers
                     }
 
                     Character modelCharacter = context.Characters.Where(m => m.CharacterName == characterName && m.CharacterId == userId).FirstOrDefault();
-                    if (modelCharacter.CharacterPic != virtualFilePath)
+                    if (modelCharacter != null && modelCharacter.CharacterPic != virtualFilePath)
                     {
                         modelCharacter.CharacterPic = virtualFilePath;
                         context.SaveChanges();
